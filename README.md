@@ -148,9 +148,14 @@ page 1. Support components:
 - We have a 470Ohm resistor on Vs, for protection against EOS, meaning protection against
 transient spikes of high currents or voltages beyond what the device is rated for. The
 datasheet recommends a resistor that is 33 Ω < R1 < 1 kΩ.
-- We have a LED in series with a 330Ohm resistor between OUT and Vs. Since OUT is pulled high,
+- We have a LED in series with a 4.7k Ohm resistor between OUT and Vs. Since OUT is pulled high,
 and then pulled low in pulses when receiving a signal, there will only be a voltage difference
 across the LED when a signal is received, giving us a visual indication when a signal is received.
+We use a larger resistor, since it forms a voltage divider with the resistance of the sensor, and
+we connect the tap of the divider, which is the sensor output, to the MCU. With a small resistor,
+like the 330 ohm we started with, we only got a range of 3.3v to 1.5V at the tap. With 4.7k, we get
+down to 266mV minimum, and so we retain most of the range. With no led and resistor we got down to
+about 180mV. TODO: explain this better, capture images from scope.
 
 ## TODO
 
@@ -158,3 +163,36 @@ across the LED when a signal is received, giving us a visual indication when a s
     - Consider a switch with a mosfet: RS3E075AT
     - Consider a reverse polarity protection diode.
 - What size should the PCB be?
+
+## PCB
+
+Looking at JLPCB for manufacturing, their PCB capabilities are documented in
+https://jlcpcb.com/capabilities/pcb-capabilities.
+
+For multi-layer:
+- Minimum trace width is 3.5 mil
+- Minimum trace spacing is 3.5 mil.
+- Minimum track to pad clearance is 0.1mm, but higher is recommended.
+- Minimum SMD pad-to-pad clearance is 0.15mm.
+- Minimum via hole to track is 0.2mm.
+
+To be conservative, I will start with 6 mil anyway.
+
+### Power
+
+- Connect the batteries in series on the surface.
+- Connect the 7.4v output to a 7.4v power plane with vias.
+- Connect the battery gnd to a gnd plane with vias.
+- Connect motor controllers and voltage regulator to power plane with vias.
+
+F.Cu — components + short signal traces
+In1.Cu — GND plane
+In2.Cu — 7.4V power plane
+B.Cu — signal routing overflow
+
+## v2 notes
+
+- We need a bigger connector for the battery, jst-ph 2pin is only rated for 2A. Consider JST VH or
+XT30. But we have to assess what connector the batteries we can get comes with, and we need to be
+able to charge it easily.
+- Have attachment points for scope at key locations I may want to inspect.
