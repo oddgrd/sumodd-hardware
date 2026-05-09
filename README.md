@@ -2,12 +2,12 @@
 
 ## Power
 
-The PCB is powered by two 3.7V Li-po batteries in series, to provide a bit more than 7.4V at full
-charge. This voltage is fed directly to the motor controllers, but the MCU wants a stable 3.3V,
-so we use a MPM3610AGQV-P buck converter configured to step down the battery input voltage to 3.3V.
-
-We have two connectors for the batteries, which are connected in series on the PCB. The connectors
-are connected to the voltage regulator and the motor controller VM pins.
+The PCB is powered by a 2s 7.4V, 25C, 750 mAh LIPO battery. This voltage is fed to a MOSFET
+transistor source, the gate of which is controlled by a SPDT switch which flips between battery
+input and ground. The transistor drain feeds a 7.4V power rail, which connects directly to the 
+motor driver VM input. However, the MCU and other components wants a stable 3.3V, so we use a
+MPM3610AGQV-P buck converter configured to step down the battery input voltage, to feed a 3.3V
+power rail.
 
 ### MPM3610 Synchronous Step-Down Converter
 
@@ -84,11 +84,9 @@ section 3 of AN4206.
 
 ## Motors
 
-We have two TB6612FNG motor controllers, each controlling two motors, two on either side, using
-the same PWM signal, as well as control input signals, for both motors. That means both motors
-always move at the same speed in the same direction.
+We have one TB6612FNG motor controller, controlling two brushed DC motors, one on either side.
 
-The motors have a max continuous current rating of 1.2A per channel, meaning per motor. It supports
+The motor driver has a max continuous current rating of 1.2A per channel, meaning per motor. It supports
 up to 2A for up to 20ms pulses at <=20% duty cycle, and up to 3.2A absolute peak for single 10ms
 pulses.
 
@@ -97,15 +95,15 @@ pulses.
 Datasheet: https://cdn.sparkfun.com/datasheets/Robotics/TB6612FNG.pdf
 
 The TB6612FNG is implemented as documented in the typical application diagram of the datasheet,
-page 7. Support components:
+page 7.
 
+Support components:
 - We have a 10k pull-up resistor from STBY to VCC, to always pull STBY high, which enables the IC,
-which saves us having to control it from our MCU.
-- We have two decoupling capacitors on the VCC pin, 0.1uF ceramic and 10uF electrolytic, to reduce noise
-from the voltage regulator, primarily due to fast and transient current demands of control logic, as well
-as trace inductance. The 10uF may be overkill, especially if the traces to the voltage regulator 3.3V
-output are short.
-- We have two decoupling capacitors on the VM pins, 0.1uF ceramic and 10uF electrolytic, which takes
+which saves us having to use a GPIO output pin to enable it from our MCU.
+- We have one decoupling capacitor on the VCC pin, 0.1uF ceramic, to reduce noise from the voltage
+regulator, primarily due to fast and transient current demands of control logic, as well as trace
+inductance.
+- We have two decoupling capacitors on the VM pins, 0.1uF and 10uF ceramic, which takes
 input voltage from the batteries directly. The motor is an inductive load which causes large, fast
 current spikes when switching, and it can also feed noise back towards the battery. The capacitors
 can supply the increased demand when current spikes, or absorb
@@ -114,6 +112,9 @@ generates them: when the PWM switches it off, if the motor is driven backwards b
 force or any other condition where the motor shaft is spun externally, turning it into a generator.
 The TB6612FNG has built-in flyback diodes to protect the IC from this phenomenon, which redirect
 spikes in current back into the supply rail, where the capacitors can absorb it.
+    - The datasheet recommends electrolytic for the 10uF cap, but it seems like
+    overkill, it's big, and looking at prior art, adafruit uses ceramic for their breakout board, and
+    sparkfun uses polymer.
 
 NOTE: all capacitors should be placed as close to the IC as possible.
 
