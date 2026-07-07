@@ -1,6 +1,6 @@
 ## Nucleo PCB
-Simpler PCB for mounting nucleo and motor driver breakout boards.
 
+Simpler PCB for mounting nucleo and motor driver breakout boards.
 
 ### Power
 
@@ -12,7 +12,10 @@ The scope was placed on the breadboard power rail on 7.3V+ and GND. The cap was 
 in parallel.
 
 Without bulk capacitor:
+
 ![alt text](images/image-1.png)
-With electrolytic 100 uF bulk capacitor: 
+
+With electrolytic 100 uF bulk capacitor:
+
 ![alt text](images/image.png)
 
