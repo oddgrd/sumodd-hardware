@@ -8558,7 +8558,6 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "00f0ee76-a875-40d8-a1fd-b7c8ad781de3")
 		(property "Reference" "#FLG04"
 			(at 203.2 26.035 0)
@@ -8572,7 +8571,7 @@
 			)
 		)
 		(property "Value" "PWR_FLAG"
-			(at 203.2 29.21 0)
+			(at 203.454 27.432 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -10263,7 +10262,6 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "2f6a22e1-9f66-4b77-b0ba-96710028d8f7")
 		(property "Reference" "#PWR040"
 			(at 203.2 38.1 0)
@@ -10277,7 +10275,7 @@
 			)
 		)
 		(property "Value" "+BATT"
-			(at 203.2 29.21 0)
+			(at 202.946 30.48 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -10741,7 +10739,6 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "3ff2d715-5640-472d-adb7-262dbc5ae449")
 		(property "Reference" "#PWR037"
 			(at 198.12 27.94 0)
@@ -10755,7 +10752,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 198.12 29.21 0)
+			(at 198.12 30.48 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects

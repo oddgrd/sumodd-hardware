@@ -1,11 +1,15 @@
 # Schema
 
+This repository holds the PCB schematic and PCB CAD files for the
+[Sumodd](https://github.com/oddgrd/sumo) mini-sumo robot motherboard. When a new iteration of the
+PCB is manufactured, the latest included commit is tagged with a version, e.g. `v0.2`.
+
 ## Power
 
-The PCB is powered by a 2s 7.4V, 25C, 750 mAh LIPO battery. This voltage is fed to a MOSFET
+The PCB is powered by a 2s 7.4V, 25C, 800 mAh LIPO battery. This voltage is fed to a MOSFET
 transistor source, the gate of which is controlled by a SPDT switch which flips between battery
 input and ground. The transistor drain feeds a 7.4V power rail, which connects directly to the 
-motor driver VM input. However, the MCU and other components wants a stable 3.3V, so we use a
+motor driver VM input. However, the MCU and other components want a stable 3.3V, so we use a
 MPM3610AGQV-P buck converter configured to step down the battery input voltage, to feed a 3.3V
 power rail.
 
@@ -14,7 +18,7 @@ power rail.
 Datasheet: https://cdn-learn.adafruit.com/assets/assets/000/127/631/original/MPM3610GQV-Z.pdf?1707519066
 
 The MPM3610 is largely implemented as documented in the typical applications sections of the datasheet,
-figure 12. Support components:
+figure 12.
 
 - We connect EN (enable) to IN (VIN) with a 100k resistor, to pull EN high when the device is
 powered.
@@ -97,7 +101,6 @@ Datasheet: https://cdn.sparkfun.com/datasheets/Robotics/TB6612FNG.pdf
 The TB6612FNG is implemented as documented in the typical application diagram of the datasheet,
 page 7.
 
-Support components:
 - We have a 10k pull-up resistor from STBY to VCC, to always pull STBY high, which enables the IC,
 which saves us having to use a GPIO output pin to enable it from our MCU.
 - We have one decoupling capacitor on the VCC pin, 0.1uF ceramic, to reduce noise from the voltage
@@ -133,6 +136,7 @@ Breakout board schematic: https://cdn.sparkfun.com/datasheets/Sensors/Infrared/Q
 For each sensor we have a three pin connector, which connects to the external breakout board with
 the sensors, which has the required supporting components. On the schematic, we just have some
 components to support the LEDs.
+
 - We connect a LED in series with a 330Ohm resistor from VCC to OUT. When no line is detected, the 
 resistance in the sensor is low, and so the output is high. When a line is detected, the resistance
 is increased, and so the output is lower. When the output is lower, there is a voltage difference
@@ -144,7 +148,8 @@ detects a line.
 Datasheet: https://cdn.sparkfun.com/assets/c/8/5/c/8/tsop382.pdf
 
 The TSOP38238 is implemented as documented in the typical application diagram of the datasheet,
-page 1. Support components:
+page 1.
+
 - We have a decoupling 1uF capacitor on Vs, to reduce input noise.
 - We have a 470Ohm resistor on Vs, for protection against EOS, meaning protection against
 transient spikes of high currents or voltages beyond what the device is rated for. The
@@ -157,13 +162,6 @@ we connect the tap of the divider, which is the sensor output, to the MCU. With 
 like the 330 ohm we started with, we only got a range of 3.3v to 1.5V at the tap. With 4.7k, we get
 down to 266mV minimum, and so we retain most of the range. With no led and resistor we got down to
 about 180mV. TODO: explain this better, capture images from scope.
-
-## TODO
-
-- Power switch?
-    - Consider a switch with a mosfet: RS3E075AT
-    - Consider a reverse polarity protection diode.
-- What size should the PCB be?
 
 ## PCB
 
@@ -179,21 +177,11 @@ For multi-layer:
 
 To be conservative, I will start with 6 mil anyway.
 
-### Power
+### PCB layers
 
-- Connect the batteries in series on the surface.
-- Connect the 7.4v output to a 7.4v power plane with vias.
-- Connect the battery gnd to a gnd plane with vias.
-- Connect motor controllers and voltage regulator to power plane with vias.
+We will go for a 4 layer board with a GND plane and a 3.3V power plane for design simplicity.
 
-F.Cu — components + short signal traces
+F.Cu — components, signal traces and power traces
 In1.Cu — GND plane
-In2.Cu — 7.4V power plane
+In2.Cu — 3.3V power plane
 B.Cu — signal routing overflow
-
-## v2 notes
-
-- We need a bigger connector for the battery, jst-ph 2pin is only rated for 2A. Consider JST VH or
-XT30. But we have to assess what connector the batteries we can get comes with, and we need to be
-able to charge it easily.
-- Have attachment points for scope at key locations I may want to inspect.
