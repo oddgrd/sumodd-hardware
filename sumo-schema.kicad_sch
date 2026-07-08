@@ -7,7 +7,7 @@
 	(title_block
 		(title "Sumodd")
 		(date "2026-02-10")
-		(rev "v01")
+		(rev "v02")
 	)
 	(lib_symbols
 		(symbol "Connector:TestPoint"

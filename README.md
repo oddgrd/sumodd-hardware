@@ -1,6 +1,6 @@
 # Schema
 
-This repository holds the PCB schematic and PCB CAD files for the
+This repository holds the schematic and PCB layout files for the
 [Sumodd](https://github.com/oddgrd/sumo) mini-sumo robot motherboard. When a new iteration of the
 PCB is manufactured, the latest included commit is tagged with a version, e.g. `v0.2`.
 
