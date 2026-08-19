@@ -13,9 +13,9 @@ in parallel.
 
 Without bulk capacitor:
 
-![alt text](images/image-1.png)
+![alt text](images/nucleo-pcb-power-without-bulk-cap.png)
 
 With electrolytic 100 uF bulk capacitor:
 
-![alt text](images/image.png)
+![alt text](images/nucleo-pcb-power-with-bulk-cap.png)
 
