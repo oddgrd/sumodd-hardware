@@ -1,24 +1,38 @@
-# Schema
+# Sumodd motherboard PCB schematic and layout
 
 This repository holds the schematic and PCB layout files for the
 [Sumodd](https://github.com/oddgrd/sumo) mini-sumo robot motherboard. When a new iteration of the
-PCB is manufactured, the latest included commit is tagged with a version, e.g. `v0.2`.
+PCB is manufactured, the latest included commit is tagged with a version number, e.g. `v0.2`.
+
+![Sumodd motherboard schematic](sumodd-schematic.png)
+
+## PCB stackup
+
+The board has four copper layers, with a total thickness of 1.6mm.
+
+F.Cu — components, signal traces and power traces
+In1.Cu — GND plane
+In2.Cu — 3.3V power plane
+B.Cu — signal routing overflow
 
 ## Power
 
 The PCB is powered by a 2s 7.4V, 25C, 800 mAh LIPO battery. This voltage is fed to a MOSFET
-transistor source, the gate of which is controlled by a SPDT switch which flips between battery
-input and ground. The transistor drain feeds a 7.4V power rail, which connects directly to the 
-motor driver VM input. However, the MCU and other components want a stable 3.3V, so we use a
-MPM3610AGQV-P buck converter configured to step down the battery input voltage, to feed a 3.3V
-power rail.
+transistor source, the gate of which is controlled by a SPST switch that connects the gate to 
+ground when closed, and a pullup resistor that connects the gate to source when opened. The
+transistor drain feeds a 7.4V power rail on the top layer, which connects directly to the motor
+driver VM input. However, the MCU and other components want a stable 3.3V, so we use a
+MPM3610AGQV-P buck converter configured to step down the battery input voltage, to feed the 3.3V
+power plane on the third layer.
 
 ### MPM3610 Synchronous Step-Down Converter
 
 Datasheet: https://cdn-learn.adafruit.com/assets/assets/000/127/631/original/MPM3610GQV-Z.pdf?1707519066
 
-The MPM3610 is largely implemented as documented in the typical applications sections of the datasheet,
-figure 12.
+The MPM3610 is implemented as documented in the typical applications sections of the datasheet,
+figure 12 (screenshot below).
+
+![MPM3610 reference layout](mpm3610-reference-layout.png)
 
 - We connect EN (enable) to IN (VIN) with a 100k resistor, to pull EN high when the device is
 powered.
@@ -45,7 +59,6 @@ divider which leads to 0.8V at the tap when output is 3.3V. We use a 75k and a 2
 Note: the PGND, IN and OUT paths should have short, direct and wide traces. The IN capacitor and
 connection should be as short and wide as possible.
 
-![alt text](image.png)
 
 ## Microcontroller
 
@@ -163,25 +176,3 @@ like the 330 ohm we started with, we only got a range of 3.3v to 1.5V at the tap
 down to 266mV minimum, and so we retain most of the range. With no led and resistor we got down to
 about 180mV. TODO: explain this better, capture images from scope.
 
-## PCB
-
-Looking at JLPCB for manufacturing, their PCB capabilities are documented in
-https://jlcpcb.com/capabilities/pcb-capabilities.
-
-For multi-layer:
-- Minimum trace width is 3.5 mil
-- Minimum trace spacing is 3.5 mil.
-- Minimum track to pad clearance is 0.1mm, but higher is recommended.
-- Minimum SMD pad-to-pad clearance is 0.15mm.
-- Minimum via hole to track is 0.2mm.
-
-To be conservative, I will start with 6 mil anyway.
-
-### PCB layers
-
-We will go for a 4 layer board with a GND plane and a 3.3V power plane for design simplicity.
-
-F.Cu — components, signal traces and power traces
-In1.Cu — GND plane
-In2.Cu — 3.3V power plane
-B.Cu — signal routing overflow
