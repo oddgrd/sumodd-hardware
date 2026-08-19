@@ -5264,7 +5264,7 @@
 		)
 		(uuid "bf078c5a-a969-4804-8006-4262eaac533c")
 	)
-	(text "3.3V Regulation\n"
+	(text "3.3V Regulator\n"
 		(exclude_from_sim no)
 		(at 123.952 69.596 0)
 		(effects
@@ -9543,7 +9543,7 @@
 				)
 			)
 		)
-		(property "Footprint" "MPM3610GQV-P:CONV_MPM3610GQV-P"
+		(property "Footprint" "sumobot:CONV_MPM3610GQV-P"
 			(at 123.19 39.37 0)
 			(hide yes)
 			(show_name no)
@@ -16122,7 +16122,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "sumobot:SW_AS11CP"
 			(at 201.93 54.61 0)
 			(hide yes)
 			(show_name no)

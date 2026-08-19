@@ -1,0 +1,4 @@
+(sym_lib_table
+	(version 7)
+	(lib (name "MPM3610GQV-P") (type "KiCad") (uri "${KIPRJMOD}/lib/symbols/MPM3610GQV-P.kicad_sym") (options "") (descr ""))
+)

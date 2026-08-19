@@ -1,10 +1,10 @@
 # Sumodd motherboard PCB schematic and layout
 
 This repository holds the schematic and PCB layout files for the
-[Sumodd](https://github.com/oddgrd/sumo) mini-sumo robot motherboard. When a new iteration of the
+[Sumodd](https://github.com/oddgrd/sumodd) mini-sumo robot motherboard. When a new iteration of the
 PCB is manufactured, the latest included commit is tagged with a version number, e.g. `v0.2`.
 
-![Sumodd motherboard schematic](sumodd-schematic.png)
+![Sumodd motherboard schematic](sumodd-schematic-v02.png)
 
 ## PCB stackup
 
@@ -30,7 +30,8 @@ power plane on the third layer.
 Datasheet: https://cdn-learn.adafruit.com/assets/assets/000/127/631/original/MPM3610GQV-Z.pdf?1707519066
 
 The MPM3610 is implemented as documented in the typical applications sections of the datasheet,
-figure 12 (screenshot below).
+figure 12, to arrive at an output of 3.3V, while following the PCB layout guidelines in figure 10
+(screenshot below).
 
 ![MPM3610 reference layout](mpm3610-reference-layout.png)
 
