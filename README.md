@@ -4,8 +4,11 @@
 > licenses. See lib/README.md.
 
 This repository holds the schematic and PCB layout files for the
-[Sumodd](https://github.com/oddgrd/sumodd) mini-sumo robot motherboard. When a new iteration of the
-PCB is manufactured, the latest included commit is tagged with a version number, e.g. `v0.2`.
+[Sumodd](https://github.com/oddgrd/sumodd) mini-sumo robot motherboard, as well as documentation
+for the layout of the various components.
+
+When a new iteration of the PCB is manufactured, the latest included commit is tagged with a
+version number, e.g. `v0.2`.
 
 ![Sumodd motherboard schematic](sumodd-schematic-v02.png)
 
@@ -13,10 +16,10 @@ PCB is manufactured, the latest included commit is tagged with a version number,
 
 The board has four copper layers, with a total thickness of 1.6mm.
 
-F.Cu — components, signal traces and power traces
-In1.Cu — GND plane
-In2.Cu — 3.3V power plane
-B.Cu — signal routing overflow
+1. F.Cu — components, signal traces and power traces
+2. In1.Cu — GND plane
+3. In2.Cu — 3.3V power plane
+4. B.Cu — signal routing overflow
 
 ## Power
 
@@ -38,37 +41,39 @@ figure 12, to arrive at an output of 3.3V, while following the PCB layout guidel
 
 ![MPM3610 reference layout](mpm3610-reference-layout.png)
 
-- We connect EN (enable) to IN (VIN) with a 100k resistor, to pull EN high when the device is
+- The EN (enable) pin is connected to IN (VIN) with a 100k resistor, to pull EN high when the device is
 powered.
-- We have a decoupling 10 uF capacitor on the IN (VIN) pin, because the regulator switches a MOSFET on and
+- There is a 10 uF decoupling capacitor on the IN (VIN) pin, because the regulator switches a MOSFET on and
 off rapidly (2MHz switching frequency), which leads to ripple currents. The capacitor maintains the DC
 voltage from the battery, and provides the AC current the regulator demands each switching cycle.
     - Note: a low-ESR ceramic capacitor with X5R or X7R dielectrics is recommended in the data sheet,
     and it should be placed as close to the IC as possible. It should have an RMS current rating
     greater than half of the maximum load current. Since the regulator will only supply the MCU,
     the sensors and some LEDs, it will have a low maximum load current, around 100mA.
-- We have another decoupling 22uF capacitor on the output, to stabilize the DC output voltage,
+- There is another decoupling 22uF capacitor on the output, to stabilize the DC output voltage,
 providing transient current when the load suddenly changes. Ceramic, tantalum or low ESR electrolytic
 capacitors are recommended, to keep the output-voltage ripple low.
-    - NOTE: the OUT path should have a short, direct and wide trace. Consider using a 10V or 16V rating.
-- We have the FB pin (feedback) connected to the tap of a resistor divider from the output to GND,
+- The FB pin (feedback) is connected to the tap of a resistor divider from the output to GND,
 which is used to control the output voltage. The regulator adjusts the duty cycle to keep voltage
 at the FB pin at the internal reference voltage (Vref), 0.798V. Since we want 3.3V, we need a
 divider which leads to 0.8V at the tap when output is 3.3V. We use a 75k and a 24k resistor:
-`VOUT = 0.8 × (1 + 75k/24k) ≈ 3.3V`.
+`VOUT = 0.8 × (1 + 75k/24k) ≈ 3.3V`. This matches the recommended values from the datasheet.
     - Note: the resistor divider should be placed as close to FB as possible, any noise on the
     trace can lead to incorrect adjustment of output voltage. Vias should not be placed on the
     FB traces.
+- The AAM pin is pulled to GND through a 62k resistor, as recommended in the datasheet for 8V
+input, which puts the MPM3610 into power-save mode. In this mode it switches at a lower frequency
+during periods of low load, relying on the output capacitor to fill in the gaps, but during periods
+of high load it will transition to CCM (continuous conduction mode) and switch at max frequency.
+Read more about the modes in the datasheet, page 13. 
 
-Note: the PGND, IN and OUT paths should have short, direct and wide traces. The IN capacitor and
-connection should be as short and wide as possible.
-
+Note: the PGND, IN and OUT paths should have short, direct and wide traces.
 
 ## Microcontroller
 
 ### STM32F303K8T6
 
-Hardware development documentation (an4206):
+Hardware development documentation (AN4206):
 https://www.st.com/resource/en/application_note/an4206-getting-started-with-stm32f3-series-hardware-development-stmicroelectronics.pdf
 
 Datasheet: https://www.st.com/resource/en/datasheet/stm32f303c6.pdf
@@ -94,7 +99,7 @@ elaborates on which decoupling capacitors should be used and where.
 For support components, we don't use an external oscillator, so we just need decoupling capacitors.
 - For both VDD/VSS pairs, we have 4.7uF (X5R, 10V) and 0.1uF (X7R, 10V) ceramic 0805 decoupling capacitors.
     - NOTE: these should be placed as close as possible to the VDD/VSS pairs, with the smaller one
-    right between them. See image of this in the an4206 doc.
+    right between them. See example of this in the AN4206 doc, section 5.4.
 - For VDDA, we have 0.1uF (X7R, 10V) and 1uF (X5R, 10V)  ceramic 0805 decoupling capacitors, placed
 as close to the VDDA as possible,between VDDA and nearest VSS.
 
@@ -103,27 +108,25 @@ Therefore, we pull it low with a 10k resistor by default, but we also add an ope
 so that we can bridge BOOT0 to 3v3 if we need to boot with a bootloader. For more details on that, see
 section 3 of AN4206.
 
-## Motors
+## Motor Driver
 
-We have one TB6612FNG motor controller, controlling two brushed DC motors, one on either side.
+The PCB has one TB6612FNG motor driver, controlling two brushed DC motors, one on either side.
 
 The motor driver has a max continuous current rating of 1.2A per channel, meaning per motor. It supports
 up to 2A for up to 20ms pulses at <=20% duty cycle, and up to 3.2A absolute peak for single 10ms
 pulses.
 
-### TB6612FNG
-
 Datasheet: https://cdn.sparkfun.com/datasheets/Robotics/TB6612FNG.pdf
 
 The TB6612FNG is implemented as documented in the typical application diagram of the datasheet,
-page 7.
+page 7:
 
-- We have a 10k pull-up resistor from STBY to VCC, to always pull STBY high, which enables the IC,
+- A 10k pull-up resistor from STBY to VCC, to always pull STBY high, which enables the IC,
 which saves us having to use a GPIO output pin to enable it from our MCU.
-- We have one decoupling capacitor on the VCC pin, 0.1uF ceramic, to reduce noise from the voltage
+- One decoupling capacitor on the VCC pin, 0.1uF ceramic, to reduce noise from the voltage
 regulator, primarily due to fast and transient current demands of control logic, as well as trace
 inductance.
-- We have two decoupling capacitors on the VM pins, 0.1uF and 10uF ceramic, which takes
+- Two decoupling capacitors on the VM pins, 0.1uF and 10uF ceramic, which takes
 input voltage from the batteries directly. The motor is an inductive load which causes large, fast
 current spikes when switching, and it can also feed noise back towards the battery. The capacitors
 can supply the increased demand when current spikes, or absorb
@@ -132,9 +135,9 @@ generates them: when the PWM switches it off, if the motor is driven backwards b
 force or any other condition where the motor shaft is spun externally, turning it into a generator.
 The TB6612FNG has built-in flyback diodes to protect the IC from this phenomenon, which redirect
 spikes in current back into the supply rail, where the capacitors can absorb it.
-    - The datasheet recommends electrolytic for the 10uF cap, but it seems like
-    overkill, it's big, and looking at prior art, adafruit uses ceramic for their breakout board, and
-    sparkfun uses polymer.
+    - The datasheet recommends electrolytic for the 10uF cap, but it seems like overkill, it's big,
+    and looking at prior art, adafruit uses ceramic for their breakout board, and sparkfun uses
+    polymer.
 
 NOTE: all capacitors should be placed as close to the IC as possible.
 
@@ -151,32 +154,36 @@ Datasheet: https://cdn.sparkfun.com/datasheets/Sensors/Proximity/QRE1113.pdf
 Breakout board schematic: https://cdn.sparkfun.com/datasheets/Sensors/Infrared/QRE1113%20Line%20Sensor%20Breakout%20-%20Analog.pdf
 
 For each sensor we have a three pin connector, which connects to the external breakout board with
-the sensors, which has the required supporting components. On the schematic, we just have some
-components to support the LEDs.
+the sensors, which has the required components for the sensor itself. On the Sumodd motherboard, we
+just place a LED for debugging purposes.
 
-- We connect a LED in series with a 330Ohm resistor from VCC to OUT. When no line is detected, the 
-resistance in the sensor is low, and so the output is high. When a line is detected, the resistance
-is increased, and so the output is lower. When the output is lower, there is a voltage difference
-across the LED, which should be enough to light it, giving us a visual indication of when the sensor
-detects a line.
+The LED is connected in series with a 4.7k resistor from VCC to line sensor OUT. When reflection
+is low in the line sensor (no white line detected), the OUT voltage is high. When reflection is high,
+the OUT voltage is LOW. When OUT is low, there is a voltage difference across the LED, from VCC to
+OUT, which drives a current through the LED, lighting it.
+
+A 330 ohm resistor was initially used for the LED, but the QRE1113 is based on a phototransistor
+pulling current from VCC, through a resistor to GND. OUT connects between the resistor and
+phototransistor, so as current increases through the transistor when IR reflection applies current
+to its base, the voltage across the resistor drops. The issue with the 330 ohm resistor was that it
+pulled more current through the LED and into OUT than the QRE1113 phototransistor could sink,
+preventing OUT from going lower than about 1.5V, significantly reducing the resolution of the
+signal. With a 4.7k resistor, OUT goes down to ~180mV with strong reflection, and the LED still
+lights clearly.
 
 ### TSOP38238 IR receiver
 
 Datasheet: https://cdn.sparkfun.com/assets/c/8/5/c/8/tsop382.pdf
 
-The TSOP38238 is implemented as documented in the typical application diagram of the datasheet,
-page 1.
+The TSOP38238 IR receiver is implemented as documented in the typical application diagram of the
+datasheet, page 1:
 
-- We have a decoupling 1uF capacitor on Vs, to reduce input noise.
-- We have a 470Ohm resistor on Vs, for protection against EOS, meaning protection against
+- A decoupling 1uF capacitor on Vs, to reduce input noise.
+- A 470Ohm resistor on Vs, for protection against EOS, meaning protection against
 transient spikes of high currents or voltages beyond what the device is rated for. The
 datasheet recommends a resistor that is 33 Ω < R1 < 1 kΩ.
-- We have a LED in series with a 4.7k Ohm resistor between OUT and Vs. Since OUT is pulled high,
+- A LED in series with a 4.7k Ohm resistor between OUT and Vs. Since OUT is pulled high when idle,
 and then pulled low in pulses when receiving a signal, there will only be a voltage difference
 across the LED when a signal is received, giving us a visual indication when a signal is received.
-We use a larger resistor, since it forms a voltage divider with the resistance of the sensor, and
-we connect the tap of the divider, which is the sensor output, to the MCU. With a small resistor,
-like the 330 ohm we started with, we only got a range of 3.3v to 1.5V at the tap. With 4.7k, we get
-down to 266mV minimum, and so we retain most of the range. With no led and resistor we got down to
-about 180mV. TODO: explain this better, capture images from scope.
+
 
