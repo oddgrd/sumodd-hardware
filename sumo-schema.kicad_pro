@@ -925,7 +925,7 @@
         "uuid": "029a9c4d-d7c4-4d77-a6f8-901cb0b40e89"
       }
     ],
-    "used_designators": "R15,SW2",
+    "used_designators": "#PWR40,#FLG2,R15,SW2",
     "variants": []
   },
   "sheets": [

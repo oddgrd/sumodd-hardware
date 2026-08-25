@@ -65,7 +65,9 @@ divider which leads to 0.8V at the tap when output is 3.3V. We use a 75k and a 2
 input, which puts the MPM3610 into power-save mode. In this mode it switches at a lower frequency
 during periods of low load, relying on the output capacitor to fill in the gaps, but during periods
 of high load it will transition to CCM (continuous conduction mode) and switch at max frequency.
-Read more about the modes in the datasheet, page 13. 
+Read more about the modes in the datasheet, page 13.
+- A LED with a 4.7k series resistor is connected from OUT to GND, lighting when the converter is
+powered and supplying the 3.3V output.
 
 Note: the PGND, IN and OUT paths should have short, direct and wide traces.
 
@@ -186,4 +188,14 @@ datasheet recommends a resistor that is 33 Ω < R1 < 1 kΩ.
 and then pulled low in pulses when receiving a signal, there will only be a voltage difference
 across the LED when a signal is received, giving us a visual indication when a signal is received.
 
+### VL53L0X Time-of-flight sensors
 
+Datasheet and documentation: https://www.st.com/en/imaging-and-photonics-solutions/vl53l0x.html#documentation
+
+For the time-of-flight ranging sensors, we simply have one 6 pin connector for each on the
+motherboard. It has pins for 3.3V input, GND, I2C SDA and SCL, as well as a DRDY GPIO external
+interrupt input which the sensor pulls low when data is ready, and an XSHUT pin, which we can use
+to reprogram the I2C address of the sensors, allowing us to run three on the same I2C bus.
+
+I2C pullup and series resistors are placed on the Adafruit breakout boards we use for the sensors:
+https://www.adafruit.com/product/3317.
