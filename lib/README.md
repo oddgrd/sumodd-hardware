@@ -1,11 +1,6 @@
-Third-party CAD assets
+# Asset Library
 
-Some symbols, footprints and 3D models in this directory originate
-from SnapMagic Search (formerly SnapEDA).
-
-Those files are licensed under CC BY-SA 4.0 with SnapMagic's
-Design Exception 1.0 and are not covered by the repository's
-main license.
-
-Source: SnapMagic Search
-Individual source/author information is retained where applicable.
+Third party symbols, footprints and 3d models are used, but not committed to git, as it would
+violate their licenses. All of these resources need to be manually sourced, by looking them up
+for each given part number, stored in the symbol field. The structure of this library can be seen
+in the root sym-lib-table and fp-lib-table files.

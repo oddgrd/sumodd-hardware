@@ -1,8 +1,5 @@
 # Sumodd motherboard PCB schematic and layout
 
-> Third-party CAD models, symbols, and footprints under lib/ retain their respective upstream
-> licenses. See lib/README.md.
-
 This repository holds the schematic and PCB layout files for the
 [Sumodd](https://github.com/oddgrd/sumodd) mini-sumo robot motherboard, as well as documentation
 for the layout of the various components.

@@ -1,0 +1,23 @@
+# KiCad lock files
+~*.lck
+
+# KiCad backups
+*-backups/
+*.bak
+*.bck
+
+# KiCad per-user/local state
+*.kicad_prl
+
+# KiCad cache/temp files
+fp-info-cache
+
+# Local/vendor libraries that must not be redistributed
+/lib/3dmodels/
+/lib/footprints.pretty/
+/lib/symbols/
+
+# Optional generated fabrication output
+/gerbers/
+/fabrication/
+/output/
