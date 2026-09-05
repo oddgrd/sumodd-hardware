@@ -304,6 +304,10 @@
         ""
       ],
       [
+        "multiple_net_names|1384300|520700|77e615cb-c702-444e-a36c-9cf4d1241297|90b7e5b5-8475-48e0-82af-191d9c9b6cef|/029a9c4d-d7c4-4d77-a6f8-901cb0b40e89|/029a9c4d-d7c4-4d77-a6f8-901cb0b40e89|/029a9c4d-d7c4-4d77-a6f8-901cb0b40e89",
+        ""
+      ],
+      [
         "pin_not_connected|1066800|419100|8f1d384e-d201-454b-a808-82e013b8615b|00000000-0000-0000-0000-000000000000|/029a9c4d-d7c4-4d77-a6f8-901cb0b40e89|/029a9c4d-d7c4-4d77-a6f8-901cb0b40e89|",
         ""
       ],
@@ -954,7 +958,7 @@
         "uuid": "029a9c4d-d7c4-4d77-a6f8-901cb0b40e89"
       }
     ],
-    "used_designators": "H1-3,J1-15,D1-8,C1-22,Q1-2,U1-6,#PWR1-58,#FLG1-4,TP1-2,JP1,R1-17,SW1-2",
+    "used_designators": "H1-3,J1-15,D1-8,C1-22,Q1-2,U1-6,#PWR1-58,#FLG1-4,TP1-4,JP1,R1-17,SW1-2",
     "variants": []
   },
   "sheets": [

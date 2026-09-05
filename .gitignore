@@ -1,16 +1,19 @@
 # KiCad lock files
 ~*.lck
 
-# KiCad backups
+# KiCad autosave/recovery files
+_autosave-*
 *-backups/
-*.bak
-*.bck
 
 # KiCad per-user/local state
 *.kicad_prl
 
 # KiCad cache/temp files
 fp-info-cache
+
+# Other temporary files
+*.bak
+*.bck
 
 # Local/vendor libraries that must not be redistributed
 /lib/3dmodels/

@@ -5610,6 +5610,12 @@
 		(uuid "2ef6a3db-018f-4f56-aaae-f1aa6c9b01f9")
 	)
 	(junction
+		(at 107.95 127)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "366f227d-5144-4b19-a254-433955fc528b")
+	)
+	(junction
 		(at 95.25 177.8)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -5698,6 +5704,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "885cfa92-9978-47b3-af04-d1f848d81fc2")
+	)
+	(junction
+		(at 105.41 129.54)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "8f4558d8-a762-4097-acb6-c05541670e4b")
 	)
 	(junction
 		(at 135.89 82.55)
@@ -6035,6 +6047,16 @@
 	)
 	(wire
 		(pts
+			(xy 105.41 129.54) (xy 123.19 129.54)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "1620c3c9-bcde-481f-b9a3-7df15b57ce4c")
+	)
+	(wire
+		(pts
 			(xy 43.18 180.34) (xy 58.42 180.34)
 		)
 		(stroke
@@ -6275,6 +6297,16 @@
 	)
 	(wire
 		(pts
+			(xy 107.95 127) (xy 123.19 127)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "308410b2-b028-4df4-8456-9eae6238015a")
+	)
+	(wire
+		(pts
 			(xy 132.08 82.55) (xy 135.89 82.55)
 		)
 		(stroke
@@ -6315,7 +6347,7 @@
 	)
 	(wire
 		(pts
-			(xy 95.25 127) (xy 123.19 127)
+			(xy 95.25 127) (xy 107.95 127)
 		)
 		(stroke
 			(width 0)
@@ -6965,7 +6997,7 @@
 	)
 	(wire
 		(pts
-			(xy 86.36 129.54) (xy 123.19 129.54)
+			(xy 86.36 129.54) (xy 105.41 129.54)
 		)
 		(stroke
 			(width 0)
@@ -11645,7 +11677,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "TestPoint"
+		(property "Value" "PWMA"
 			(at 217.17 93.2179 0)
 			(hide yes)
 			(show_name no)
@@ -11878,7 +11910,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "TestPoint"
+		(property "Value" "PWMB"
 			(at 210.312 137.414 0)
 			(hide yes)
 			(show_name no)
@@ -13741,6 +13773,85 @@
 			(project "sumo-schema"
 				(path "/029a9c4d-d7c4-4d77-a6f8-901cb0b40e89"
 					(reference "#PWR07")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 107.95 127 180)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "544488be-e112-417a-8325-63580076305a")
+		(property "Reference" "TP4"
+			(at 112.776 131.826 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "SCL"
+			(at 105.41 129.0321 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
+			(at 102.87 127 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 102.87 127 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "test point"
+			(at 107.95 127 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "ef8bfc26-ee24-47b7-bd1a-f78ad6e821cc")
+		)
+		(instances
+			(project "sumo-schema"
+				(path "/029a9c4d-d7c4-4d77-a6f8-901cb0b40e89"
+					(reference "TP4")
 					(unit 1)
 				)
 			)
@@ -21049,6 +21160,85 @@
 			(project "sumo-schema"
 				(path "/029a9c4d-d7c4-4d77-a6f8-901cb0b40e89"
 					(reference "C3")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 105.41 129.54 180)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "dcf212ed-eaa9-48ff-919c-2ca2652b1c3d")
+		(property "Reference" "TP3"
+			(at 110.236 134.366 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "SDA"
+			(at 102.87 131.5721 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Pad_D1.5mm"
+			(at 100.33 129.54 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 100.33 129.54 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "test point"
+			(at 105.41 129.54 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "f5e3d27f-866d-43a3-99de-a8d477ddc8ad")
+		)
+		(instances
+			(project "sumo-schema"
+				(path "/029a9c4d-d7c4-4d77-a6f8-901cb0b40e89"
+					(reference "TP3")
 					(unit 1)
 				)
 			)
