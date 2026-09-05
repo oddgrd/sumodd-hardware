@@ -43,9 +43,10 @@ figure 12, to arrive at an output of 3.3V, while following the PCB layout guidel
 
 - The EN (enable) pin is connected to IN (VIN) with a 100k resistor, to pull EN high when the device is
 powered.
-- There is a 10 uF decoupling capacitor on the IN (VIN) pin, because the regulator switches a MOSFET on and
-off rapidly (2MHz switching frequency), which leads to ripple currents. The capacitor maintains the DC
-voltage from the battery, and provides the AC current the regulator demands each switching cycle.
+- There is a 10 uF input capacitor on the IN (VIN) pin. The converter switches its internal mosfets
+on and off at 2MHz to regulate the output voltage. The capacitor, which should be placed right next
+to the device, provides a low impedance local source for the high-frequency current demands of the
+converter, rather than requiring the distant battery to supply it.
     - Note: a low-ESR ceramic capacitor with X5R or X7R dielectrics is recommended in the data sheet,
     and it should be placed as close to the IC as possible. It should have an RMS current rating
     greater than half of the maximum load current. Since the regulator will only supply the MCU,
@@ -112,36 +113,47 @@ section 3 of AN4206.
 
 ## Motor Driver
 
-The PCB has one TB6612FNG motor driver, controlling two brushed DC motors, one on either side.
+https://www.ti.com/lit/ds/symlink/drv8212.pdf
 
-The motor driver has a max continuous current rating of 1.2A per channel, meaning per motor. It supports
-up to 2A for up to 20ms pulses at <=20% duty cycle, and up to 3.2A absolute peak for single 10ms
-pulses.
+The PCB has two DRV8212DSG motor drivers, controlling one motor each bidirectionally, using the
+outputs as a full-bridge. The DSG package for this driver supports either a PWM interface or a
+PH/EN interface.
 
-Datasheet: https://cdn.sparkfun.com/datasheets/Robotics/TB6612FNG.pdf
+The PWM interface requires two PWM inputs, one to each input pin, where one will
+be disabled, or 0% duty cycle, and the others duty cycle will determine the speed. Flip this to
+change direction.
 
-The TB6612FNG is implemented as documented in the typical application diagram of the datasheet,
-page 7:
+The PH/EN interface, however, only requires one PWM input, to the first input pin, IN1. Then, the
+second input pin is used to control direction. Two microcontroller pins are still needed, but the
+pins can be choosen more freely, as only one needs to be PWM capable.
 
-- A 10k pull-up resistor from STBY to VCC, to always pull STBY high, which enables the IC,
-which saves us having to use a GPIO output pin to enable it from our MCU.
-- One decoupling capacitor on the VCC pin, 0.1uF ceramic, to reduce noise from the voltage
-regulator, primarily due to fast and transient current demands of control logic, as well as trace
-inductance.
-- Two decoupling capacitors on the VM pins, 0.1uF and 10uF ceramic, which takes
-input voltage from the batteries directly. The motor is an inductive load which causes large, fast
-current spikes when switching, and it can also feed noise back towards the battery. The capacitors
-can supply the increased demand when current spikes, or absorb
-[back-EMF](https://en.wikipedia.org/wiki/Counter-electromotive_force) spikes when the motor
-generates them: when the PWM switches it off, if the motor is driven backwards by a pushing
-force or any other condition where the motor shaft is spun externally, turning it into a generator.
-The TB6612FNG has built-in flyback diodes to protect the IC from this phenomenon, which redirect
-spikes in current back into the supply rail, where the capacitors can absorb it.
-    - The datasheet recommends electrolytic for the 10uF cap, but it seems like overkill, it's big,
-    and looking at prior art, adafruit uses ceramic for their breakout board, and sparkfun uses
-    polymer.
+For this application, the PH/EN interface will be used, which is enabled by pulling the MODE pin
+high on startup. This is achieved with a pullup on the MODE pin. See datasheet section 8.3.2.2
+for more details, including a control truth table, 8-4.
 
-NOTE: all capacitors should be placed as close to the IC as possible.
+For the motor connectors, JST-PA is used, which supports up to 3A, with 22 AWG wires.
+
+### Layout
+
+The components are implemented as recommended in the typical application diagrams for the PH/EN
+interface motor driving, figure 9-4. The device is placed as recommended in the layout example
+for the DRL package, figure 11-2, with the thermal pad connected to the GND plane with vias.
+A ground pour with stitching vias is also added on the bottom layer, underneath the driver, for
+better thermal dissipation.
+
+For each driver:
+- A low ESR X7R 0603 ceramic 25V 0.1uF decoupling capacitor on VCC.
+- A low ESR X7R 0603 ceramic 25V 0.1uF decoupling capacitor on VM.
+- Two 22uF 25V 1206 bulk ceramic capacitors, on VM. The datasheet does not give a clear
+recommendation for capacitance here, but they do talk about the importance of and considerations
+for bulk capacitance in section 10.1. However, they use two 22uF 25V ceramics on the DRV821x
+evaluation board ([EV board datasheet table 7-1](https://www.ti.com/lit/ug/slou540a/slou540a.pdf)),
+so the same is done here. Whether this is overkill can then be measured, and in future versions one
+of the caps could be removed.
+
+All capacitors are placed as close to the device as possible, even the bulk capacitors, to minimize
+loop inductance.
+
 
 ## Sensors
 

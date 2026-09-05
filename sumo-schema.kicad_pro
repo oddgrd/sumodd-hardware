@@ -39,9 +39,9 @@
         "other_text_thickness": 0.15,
         "other_text_upright": false,
         "pads": {
-          "drill": 0.0,
-          "height": 0.95,
-          "width": 0.9
+          "drill": 0.2,
+          "height": 0.5,
+          "width": 0.5
         },
         "silk_line_width": 0.1,
         "silk_text_italic": false,
@@ -212,6 +212,7 @@
       "track_widths": [
         0.0,
         0.3,
+        0.4,
         0.5,
         1.0,
         1.2
@@ -257,7 +258,7 @@
       "internal_id": "",
       "mfg": "",
       "mpn": "",
-      "sch_revision": "v02"
+      "sch_revision": "v03"
     },
     "layer_pairs": [],
     "layer_presets": [],
@@ -292,6 +293,10 @@
       ],
       [
         "multiple_net_names|1181100|266700|fb6b1cb3-557f-4fe4-85fe-bf10d254dad2|77736c34-5d4e-47b9-9611-76cc0ab69e3f|/029a9c4d-d7c4-4d77-a6f8-901cb0b40e89|/029a9c4d-d7c4-4d77-a6f8-901cb0b40e89|/029a9c4d-d7c4-4d77-a6f8-901cb0b40e89",
+        ""
+      ],
+      [
+        "multiple_net_names|1384300|520700|059cd717-829b-4ad3-9ae9-cad2677ac847|90b7e5b5-8475-48e0-82af-191d9c9b6cef|/029a9c4d-d7c4-4d77-a6f8-901cb0b40e89|/029a9c4d-d7c4-4d77-a6f8-901cb0b40e89|/029a9c4d-d7c4-4d77-a6f8-901cb0b40e89",
         ""
       ],
       [
@@ -760,7 +765,7 @@
         },
         {
           "group_by": false,
-          "label": "Description",
+          "label": "DESCRIPTION",
           "name": "Description",
           "show": false
         },
@@ -768,12 +773,6 @@
           "group_by": false,
           "label": "#",
           "name": "${ITEM_NUMBER}",
-          "show": false
-        },
-        {
-          "group_by": false,
-          "label": "DESCRIPTION",
-          "name": "DESCRIPTION",
           "show": false
         },
         {
@@ -859,6 +858,36 @@
           "label": "Check_prices",
           "name": "Check_prices",
           "show": false
+        },
+        {
+          "group_by": false,
+          "label": "MANUFACTURER",
+          "name": "MANUFACTURER",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "MAXIMUM_PACKAGE_HEIGHT",
+          "name": "MAXIMUM_PACKAGE_HEIGHT",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Purchase-URL",
+          "name": "Purchase-URL",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Digikey",
+          "name": "Digikey",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "Part Number",
+          "name": "Part Number",
+          "show": true
         }
       ],
       "filter_string": "",
@@ -925,7 +954,7 @@
         "uuid": "029a9c4d-d7c4-4d77-a6f8-901cb0b40e89"
       }
     ],
-    "used_designators": "#PWR40,#FLG2,R15,SW2",
+    "used_designators": "H1-3,J1-15,D1-8,C1-22,Q1-2,U1-6,#PWR1-58,#FLG1-4,TP1-2,JP1,R1-17,SW1-2",
     "variants": []
   },
   "sheets": [

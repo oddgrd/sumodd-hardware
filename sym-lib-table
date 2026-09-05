@@ -2,4 +2,5 @@
 	(version 7)
 	(lib (name "MPM3610GQV-P") (type "KiCad") (uri "${KIPRJMOD}/lib/symbols/MPM3610GQV-P.kicad_sym") (options "") (descr ""))
 	(lib (name "AS11CP") (type "KiCad") (uri "${KIPRJMOD}/lib/symbols/AS11CP.kicad_sym") (options "") (descr ""))
+	(lib (name "CONN_SM02B-PASS_JST") (type "KiCad") (uri "${KIPRJMOD}/lib/symbols/CONN_SM02B-PASS_JST.kicad_sym") (options "") (descr ""))
 )
