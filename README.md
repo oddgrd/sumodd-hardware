@@ -5,9 +5,10 @@ This repository holds the schematic and PCB layout files for the
 for the layout of the various components.
 
 When a new iteration of the PCB is manufactured, the latest included commit is tagged with a
-version number, e.g. `v0.2`.
+version number, e.g. `v0.3`. All parts are specified with Digikey part numbers, in the symbols
+`Part number` field.
 
-![Sumodd motherboard schematic](sumodd-schematic-v02.png)
+![Sumodd motherboard schematic](sumodd-schematic-v03.png)
 
 ## PCB stackup
 
@@ -18,15 +19,20 @@ The board has four copper layers, with a total thickness of 1.6mm.
 3. In2.Cu — 3.3V power plane
 4. B.Cu — signal routing overflow
 
-## Power
+# Power
 
 The PCB is powered by a 2s 7.4V, 25C, 800 mAh LIPO battery. This voltage is fed to a MOSFET
 transistor source, the gate of which is controlled by a SPST switch that connects the gate to 
 ground when closed, and a pullup resistor that connects the gate to source when opened. The
 transistor drain feeds a 7.4V power rail on the top layer, which connects directly to the motor
-driver VM input. However, the MCU and other components want a stable 3.3V, so we use a
-MPM3610AGQV-P buck converter configured to step down the battery input voltage, to feed the 3.3V
-power plane on the third layer.
+driver VM input.
+
+The MCU and other components want a stable 3.3V, so we use a MPM3610AGQV-P buck converter
+configured to step down the battery input voltage, to feed the 3.3V power plane on the third layer.
+
+To support the high current draw of the motor drivers, up to 2A continuous each, a [Molex Micro-Fit
+3.0](https://www.molex.com/en-us/products/part-detail/430450221) connector is used for the battery,
+which is rated for 8.5A.
 
 ### MPM3610 Synchronous Step-Down Converter
 
@@ -35,6 +41,8 @@ Datasheet: https://cdn-learn.adafruit.com/assets/assets/000/127/631/original/MPM
 The MPM3610 is implemented as documented in the typical applications sections of the datasheet,
 figure 12, to arrive at an output of 3.3V, while following the PCB layout guidelines in figure 10
 (screenshot below).
+
+### Layout 
 
 ![MPM3610 reference layout](mpm3610-reference-layout.png)
 
@@ -69,17 +77,40 @@ powered and supplying the 3.3V output.
 
 Note: the PGND, IN and OUT paths should have short, direct and wide traces.
 
+### Battery monitor
+
+To be able to monitor the battery voltage with the MCU, a resistor divider is used, with the tap of
+the divider connected to an ADC channel pin on the MCU. Furthermore, we place a 0.1uF ceramic cap
+from the tap to ground, to act as a low-pass filter.
+
+Since a 7.4V battery is used, which goes up to around 8.4V fully charged, the divider is important
+to ensure the MCU input stays within its 0 - 3.3V measurement range (Vref = VDDA on the
+STM32F303K8T6, which will be 3.3V), for accurate measurements, as well as within its maximum
+voltage rating, to avoid damaging the MCU. For more information see section 6.2 and 6.3 in the
+[MCU datasheet](#stm32f303k8t6).
+
+With a 75k R1 and a 24k R2, the divider ratio is `R2 / (R1 + R2) = 24k / 99k = 0.242`. With a fully
+charged battery at 8.4V, the ADC input pin will see a voltage way below its limit:
+`8.4 * 0.242 = 2.04`. If the battery power rail sees higher transient voltages, the divider gives
+us a lot of headroom, for example if the voltage goes all the way to 12V: `12 * 0.242 = 2.91V`. We
+could have used smaller resistors here, but these already existed in the BOM, they are also used
+for the buck converter.
+
+The voltage read in the ADC will then be converted back to the actual voltage of the battery in the
+MCU firmware.
+
+# Logic
+
 ## Microcontroller
 
-### STM32F303K8T6
+The microcontroller is an STM32F303K8T6 see datasheet:
+https://www.st.com/resource/en/datasheet/stm32f303c6.pdf
 
-Hardware development documentation (AN4206):
+And hardware development documentation (AN4206), which was used heavily when designing the layout:
 https://www.st.com/resource/en/application_note/an4206-getting-started-with-stm32f3-series-hardware-development-stmicroelectronics.pdf
 
-Datasheet: https://www.st.com/resource/en/datasheet/stm32f303c6.pdf
-
-The microcontroller takes its power from the 3.3V rail, supplied by the voltage regulator. It
-reads all the sensors, and controls the motors via the motor controllers.
+The microcontroller takes its power from the 3.3V power plane, supplied by the voltage regulator.
+It reads all the sensors, and controls the motors via the motor controllers.
 
 The hardware development documentation recommends:
 - A multilayer PCB with a separate layer dedicated to ground, and another layer detected to supply
@@ -96,7 +127,9 @@ can be done through software by configuring the pins as GPIO output.
 NOTE: for more detail, see the hardware development documentation section 5, where it also
 elaborates on which decoupling capacitors should be used and where.
 
-For support components, we don't use an external oscillator, so we just need decoupling capacitors.
+### Layout
+
+No external oscillator is used, so the only support components needed are decoupling capacitors.
 - For both VDD/VSS pairs, we have 4.7uF (X5R, 10V) and 0.1uF (X7R, 10V) ceramic 0805 decoupling capacitors.
     - NOTE: these should be placed as close as possible to the VDD/VSS pairs, with the smaller one
     right between them. See example of this in the AN4206 doc, section 5.4.
@@ -106,9 +139,13 @@ as close to the VDDA as possible,between VDDA and nearest VSS.
 On this MCU, the BOOT0 pin should not float, and to boot from flash you need to pull the BOOT0 pin low.
 Therefore, we pull it low with a 10k resistor by default, but we also add an open 2 pad solder jumper,
 so that we can bridge BOOT0 to 3v3 if we need to boot with a bootloader. For more details on that, see
-section 3 of AN4206.
+section 3 of AN4206. Furthermor, GPIO pins should not float, so unused pins should be pulled high
+or low with a resistor, or configured as GPIO output in the firmware. The latter is done for this
+project.
 
-## Motor Driver
+# Motor control
+
+## Motor Drivers
 
 https://www.ti.com/lit/ds/symlink/drv8212.pdf
 
@@ -128,9 +165,9 @@ For this application, the PH/EN interface will be used, which is enabled by pull
 high on startup. This is achieved with a pullup on the MODE pin. See datasheet section 8.3.2.2
 for more details, including a control truth table, 8-4.
 
-For the motor connectors, JST-PA is used, which supports up to 3A, with 22 AWG wires.
+### Layout 
 
-### Layout
+For the motor connectors, JST-PA is used, which supports up to 3A, with 22 AWG wires.
 
 The components are implemented as recommended in the typical application diagrams for the PH/EN
 interface motor driving, figure 9-4. The device is placed as recommended in the layout example
@@ -149,17 +186,18 @@ so the same is done here. Whether this is overkill can then be measured, and in 
 of the caps could be removed.
 
 All capacitors are placed as close to the device as possible, even the bulk capacitors, to minimize
-loop inductance.
+loop inductance. To support the high current draw of the motors,
+[JST-PA](https://www.jst-mfg.com/product/pdf/eng/ePA-F.pdf) connectors are used for the motor
+connectors, which are rated for 3A.
 
-
-## Sensors
+# Sensors
 
 The final robot will have four analog line sensors, one digital IR receiver and three digital
 time-of-flight distance sensors. All of them will connect to the 3.3V power rail supplied by
 the voltage regulator. They will not mount directly to the PCB, the PCB will only have connectors
 for them.
 
-### QRE1113 analog line sensors
+## QRE1113 analog line sensors
 
 Datasheet: https://cdn.sparkfun.com/datasheets/Sensors/Proximity/QRE1113.pdf
 Breakout board schematic: https://cdn.sparkfun.com/datasheets/Sensors/Infrared/QRE1113%20Line%20Sensor%20Breakout%20-%20Analog.pdf
@@ -182,7 +220,7 @@ preventing OUT from going lower than about 1.5V, significantly reducing the reso
 signal. With a 4.7k resistor, OUT goes down to ~180mV with strong reflection, and the LED still
 lights clearly.
 
-### TSOP38238 IR receiver
+## TSOP38238 IR receiver
 
 Datasheet: https://cdn.sparkfun.com/assets/c/8/5/c/8/tsop382.pdf
 
@@ -197,14 +235,19 @@ datasheet recommends a resistor that is 33 Ω < R1 < 1 kΩ.
 and then pulled low in pulses when receiving a signal, there will only be a voltage difference
 across the LED when a signal is received, giving us a visual indication when a signal is received.
 
-### VL53L0X Time-of-flight sensors
+## VL53L4CD Time-of-flight sensors
 
-Datasheet and documentation: https://www.st.com/en/imaging-and-photonics-solutions/vl53l0x.html#documentation
+Datasheet and documentation: https://www.st.com/resource/en/datasheet/vl53l4cd.pdf
 
-For the time-of-flight ranging sensors, we simply have one 6 pin connector for each on the
-motherboard. It has pins for 3.3V input, GND, I2C SDA and SCL, as well as a DRDY GPIO external
-interrupt input which the sensor pulls low when data is ready, and an XSHUT pin, which we can use
-to reprogram the I2C address of the sensors, allowing us to run three on the same I2C bus.
+The VL53L4CD sensors are placed on custom daughterboards, which can be connected to the motherboard
+with 6 pin JST-GH connectors, and communicated with over I2C. Since three ranging sensors are used,
+three JST-GH connectors are placed on the motherboard.
 
-I2C pullup and series resistors are placed on the Adafruit breakout boards we use for the sensors:
-https://www.adafruit.com/product/3317.
+The pins are 3.3V input, GND, I2C SDA and SCL, as well as a DRDY GPIO external interrupt input
+which the sensor pulls low when data is ready, and an XSHUT pin, which we can use to reprogram
+the I2C address of the sensors, allowing us to run three on the same I2C bus.
+
+I2C series resistors are placed on the custom VL53L4CD daughterboards, and the I2C pullups are
+placed once on the motherboard, as recommended in the VL53L4CD datasheet, section 1.4. The pullup and
+series resistor values are chosen from the datasheet recommendations, table 4, to support I2C fast
+mode plus, which is 1MHz I2C.
