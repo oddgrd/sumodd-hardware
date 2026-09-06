@@ -19,6 +19,8 @@ The board has four copper layers, with a total thickness of 1.6mm.
 3. In2.Cu — 3.3V power plane
 4. B.Cu — signal routing overflow
 
+![Sumodd motherboard pcb layout](sumodd-pcb-v03.png)
+
 # Power
 
 The PCB is powered by a 2s 7.4V, 25C, 800 mAh LIPO battery. This voltage is fed to a MOSFET
