@@ -20,7 +20,6 @@ fp-info-cache
 /lib/footprints.pretty/
 /lib/symbols/
 
-# Optional generated fabrication output
-/gerbers/
-/fabrication/
-/output/
+# Generated fabrication output
+/production
+fabrication-toolkit-options.json
