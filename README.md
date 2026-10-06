@@ -2,7 +2,8 @@
 
 This repository holds the schematic and PCB layout files for the
 [Sumodd](https://github.com/oddgrd/sumodd) mini-sumo robot motherboard, as well as documentation
-for the layout of the various components.
+for the layout of the various components. For the custom ranging sensor daughterboards, see the
+[Auge repo](https://github.com/oddgrd/auge).
 
 When a new iteration of the PCB is manufactured, the latest included commit is tagged with a
 version number, e.g. `v0.3`. All parts are specified with Digikey part numbers, in the symbols
@@ -241,9 +242,9 @@ across the LED when a signal is received, giving us a visual indication when a s
 
 Datasheet and documentation: https://www.st.com/resource/en/datasheet/vl53l4cd.pdf
 
-The VL53L4CD sensors are placed on custom daughterboards, which can be connected to the motherboard
-with 6 pin JST-GH connectors, and communicated with over I2C. Since three ranging sensors are used,
-three JST-GH connectors are placed on the motherboard.
+The VL53L4CD sensors are placed on [custom daughterboards](https://github.com/oddgrd/auge), which
+can be connected to the motherboard with 6 pin JST-GH connectors, and communicated with over I2C.
+Since three ranging sensors are used, three JST-GH connectors are placed on the motherboard.
 
 The pins are 3.3V input, GND, I2C SDA and SCL, as well as a DRDY GPIO external interrupt input
 which the sensor pulls low when data is ready, and an XSHUT pin, which we can use to reprogram
@@ -252,4 +253,4 @@ the I2C address of the sensors, allowing us to run three on the same I2C bus.
 I2C series resistors are placed on the custom VL53L4CD daughterboards, and the I2C pullups are
 placed once on the motherboard, as recommended in the VL53L4CD datasheet, section 1.4. The pullup and
 series resistor values are chosen from the datasheet recommendations, table 4, to support I2C fast
-mode plus, which is 1MHz I2C.
+mode plus, which is 1MHz I2C. For more information, see https://github.com/oddgrd/auge#v01-testing.
